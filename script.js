@@ -141,6 +141,17 @@
       { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
     );
     revealEls.forEach(function (el) { revealObserver.observe(el); });
+    // Safety: hero is above the fold — show it immediately so mascot never stays hidden
+    document.querySelectorAll(".hero .reveal").forEach(function (el) {
+      el.classList.add("visible");
+    });
+    // Fallback: force everything visible after 1.5s in case observer never fires
+    setTimeout(function () {
+      document.querySelectorAll(".reveal:not(.visible)").forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) el.classList.add("visible");
+      });
+    }, 1500);
   } else {
     revealEls.forEach(function (el) { el.classList.add("visible"); });
   }
